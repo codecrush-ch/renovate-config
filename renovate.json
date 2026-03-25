@@ -1,0 +1,43 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:best-practices"
+  ],
+  "prConcurrentLimit": 5,
+  "packageRules": [
+    {
+      "description": "Nuxt: nur Minor/Patch, kein Major (bleibt auf 3.x)",
+      "matchPackageNames": ["nuxt", "@nuxt/**"],
+      "allowedVersions": "^3"
+    },
+    {
+      "description": "Vue: an Nuxt 3 angebunden, kein Major",
+      "matchPackageNames": ["vue", "vue-router"],
+      "allowedVersions": "^3"
+    },
+    {
+      "description": "Major Updates nur nach Freigabe im Dependency Dashboard",
+      "matchUpdateTypes": ["major"],
+      "dependencyDashboardApproval": true
+    },
+    {
+      "description": "Dev-Dependencies bündeln",
+      "matchDepTypes": ["devDependencies"],
+      "groupName": "devDependencies"
+    },
+    {
+      "description": "npm/pnpm Updates erst nach 3 Tagen (stabilität)",
+      "matchDatasources": ["npm"],
+      "minimumReleaseAge": "3 days"
+    },
+    {
+      "description": "Weekly PRs für bessere Digestibility",
+      "matchUpdateTypes": ["minor", "patch"],
+      "schedule": ["before 3am on Monday"]
+    }
+  ],
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": ["before 3am on Sunday"]
+  }
+}
