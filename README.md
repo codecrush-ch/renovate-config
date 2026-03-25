@@ -8,7 +8,7 @@ In deinem Repo in der `renovate.json`:
 ```json
 {
   "extends": [
-    "github>DEIN-USERNAME/renovate-config"
+    "github>codecrush-ch/renovate-config"
   ]
 }
 ```
