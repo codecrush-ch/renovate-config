@@ -4,6 +4,7 @@
     "config:best-practices"
   ],
   "prConcurrentLimit": 5,
+  "automerge": false,
   "packageRules": [
     {
       "description": "Nuxt: nur Minor/Patch, kein Major (bleibt auf 3.x)",
@@ -26,18 +27,26 @@
       "groupName": "devDependencies"
     },
     {
-      "description": "npm/pnpm Updates erst nach 3 Tagen (stabilität)",
+      "description": "npm/pnpm Updates erst nach 3 Tagen (Stabilität)",
       "matchDatasources": ["npm"],
       "minimumReleaseAge": "3 days"
     },
     {
-      "description": "Weekly PRs für bessere Digestibility",
+      "description": "Patch & Minor automatisch mergen nach grüner CI",
       "matchUpdateTypes": ["minor", "patch"],
+      "automerge": true,
+      "automergeType": "pr",
+      "automergeStrategy": "squash",
+      "platformAutomerge": true,
       "schedule": ["before 3am on Monday"]
     }
   ],
   "lockFileMaintenance": {
     "enabled": true,
+    "automerge": true,
+    "automergeType": "pr",
+    "automergeStrategy": "squash",
+    "platformAutomerge": true,
     "schedule": ["before 3am on Sunday"]
   }
 }
