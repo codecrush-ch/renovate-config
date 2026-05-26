@@ -1,29 +1,56 @@
-# Renovate Shared Config
+# renovate-config
 
-Zentrale Renovate-Konfiguration für alle meine Projekte.
+Zentrale [Renovate](https://docs.renovatebot.com/) Konfiguration für alle Repos von [Code Crush GmbH](https://codecrush.ch).
 
-## Verwendung
+---
 
-In deinem Repo in der `renovate.json`:
+## Einbinden
+
+`renovate.json` im Root des Repos anlegen:
+
 ```json
 {
-  "extends": [
-    "github>codecrush-ch/renovate-config"
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["github>codecrush-ch/renovate-config"]
+}
+```
+
+> **Wichtig:** Renovate muss im jeweiligen Repo als [GitHub App](https://github.com/apps/renovate) installiert sein.
+
+---
+
+## Verhalten im Überblick
+
+| Regel | Verhalten |
+|---|---|
+| **Major Updates** | Nur nach manueller Freigabe im Dependency Dashboard |
+| **Minor & Patch** | Automatischer Squash-Merge, CI muss grün sein — Mo. vor 3 Uhr |
+| **`nuxt`, `@nuxt/*`** | Locked auf `^3`, kein Major-PR |
+| **`vue`, `vue-router`** | Locked auf `^3`, kein Major-PR |
+| **devDependencies** | Gebündelt in einem einzigen PR |
+| **npm Releases** | 3 Tage Wartezeit vor erstem PR |
+| **Lockfile Maintenance** | Wöchentlich, So. vor 3 Uhr, automerge |
+| **Max. offene PRs** | 5 gleichzeitig |
+
+---
+
+## Projektspezifisch überschreiben
+
+Overrides einfach in der `renovate.json` des Repos ergänzen — sie werden mit dieser Config gemergt:
+
+```json
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["github>codecrush-ch/renovate-config"],
+  "packageRules": [
+    {
+      "matchPackageNames": ["some-package"],
+      "enabled": false
+    }
   ]
 }
 ```
 
-Ersetze `DEIN-USERNAME` mit deinem GitHub-Benutzernamen.
+---
 
-## Konfiguration
-
-- ✅ Nuxt 3.x Lock (keine Major)
-- ✅ Vue 3.x Lock
-- ✅ Major Updates mit Dashboard Approval
-- ✅ Dev-Dependencies gebündelt
-- ✅ npm Updates mit 3 Tagen Verzögerung
-- ✅ Lock File Maintenance aktiviert
-
-## Updates
-
-Einfach diese Config updaten und alle Repos nutzen automatisch die neuen Einstellungen.
+Änderungen an dieser Config wirken sich automatisch auf alle einbindenden Repos aus.
