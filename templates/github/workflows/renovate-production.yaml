@@ -1,0 +1,126 @@
+# Template: nach codecrush-ch/<projekt>/.github/workflows/renovate-production.yaml kopieren.
+# Voraussetzung: deploy.yaml unterstützt workflow_call (environment, services_to_deploy).
+# sync-develop.yaml sollte renovate[bot]-Pushes ausschliessen (Sync läuft hier nach Deploy).
+#
+# Ausgeschlossen (manuell): Config-Repos, movermap-app, abweichende Deploy-Workflows
+# (z. B. schreiner-berneroberland.ch, gastrostory.ch).
+
+name: ♻️ Renovate Production
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  workflow_dispatch:
+    inputs:
+      skip_actor_check:
+        description: "Test – Renovate-Filter überspringen (nur manuell)"
+        required: false
+        type: boolean
+        default: false
+
+concurrency:
+  group: renovate-production-${{ github.repository }}
+  cancel-in-progress: false
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    outputs:
+      proceed: ${{ steps.policy.outputs.proceed }}
+      sync_develop: ${{ steps.policy.outputs.sync_develop }}
+    steps:
+      - name: 📦 Repository auschecken
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+        with:
+          fetch-depth: 0
+
+      - name: 🚦 Renovate- und Branch-Policy
+        id: policy
+        env:
+          SKIP_ACTOR_CHECK: ${{ github.event_name == 'workflow_dispatch' && inputs.skip_actor_check }}
+        run: |
+          if [ "${{ github.actor }}" != "renovate[bot]" ] && [ "$SKIP_ACTOR_CHECK" != "true" ]; then
+            echo "proceed=false" >> "$GITHUB_OUTPUT"
+            echo "sync_develop=false" >> "$GITHUB_OUTPUT"
+            echo "Übersprungen: Actor ist nicht renovate[bot]."
+            exit 0
+          fi
+
+          HAS_MAIN=false
+          if git ls-remote --heads origin main | grep -q .; then
+            HAS_MAIN=true
+          fi
+
+          HAS_DEVELOP=false
+          if git ls-remote --heads origin develop | grep -q .; then
+            HAS_DEVELOP=true
+          fi
+
+          if [ "$HAS_MAIN" = true ]; then
+            if [ "${{ github.ref }}" != "refs/heads/main" ]; then
+              echo "proceed=false" >> "$GITHUB_OUTPUT"
+              echo "sync_develop=false" >> "$GITHUB_OUTPUT"
+              echo "Übersprungen: Repo hat main, Push war nicht auf main."
+              exit 0
+            fi
+            echo "proceed=true" >> "$GITHUB_OUTPUT"
+            if [ "$HAS_DEVELOP" = true ]; then
+              echo "sync_develop=true" >> "$GITHUB_OUTPUT"
+            else
+              echo "sync_develop=false" >> "$GITHUB_OUTPUT"
+            fi
+          else
+            if [ "${{ github.ref }}" != "refs/heads/develop" ]; then
+              echo "proceed=false" >> "$GITHUB_OUTPUT"
+              echo "sync_develop=false" >> "$GITHUB_OUTPUT"
+              echo "Übersprungen: Repo ohne main, Push war nicht auf develop."
+              exit 0
+            fi
+            echo "proceed=true" >> "$GITHUB_OUTPUT"
+            echo "sync_develop=false" >> "$GITHUB_OUTPUT"
+          fi
+
+  deploy:
+    needs: gate
+    if: needs.gate.outputs.proceed == 'true'
+    uses: ./.github/workflows/deploy.yaml
+    with:
+      environment: Production
+      services_to_deploy: auto
+    secrets: inherit
+
+  sync-develop:
+    needs: [gate, deploy]
+    if: needs.gate.outputs.sync_develop == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: 📥 Repository auschecken
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+        with:
+          fetch-depth: 0
+
+      - name: ⚙️ Git konfigurieren
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "github-actions@codecrush.ch"
+
+      - name: 🔍 Alle Branches abrufen
+        run: git fetch --all
+
+      - name: 🔄 develop mit main synchronisieren
+        run: |
+          COMMITS_BEHIND=$(git rev-list origin/develop..origin/main --count)
+          echo "Develop liegt um $COMMITS_BEHIND Commits hinter Main."
+          if [ "$COMMITS_BEHIND" -gt 0 ]; then
+            echo "Synchronisiere develop mit main..."
+            git checkout develop
+            git pull origin develop
+            git merge --no-ff origin/main -m "🔄 develop mit main synchronisieren"
+            git push origin develop
+          else
+            echo "Develop ist bereits auf dem aktuellen Stand."
+          fi

@@ -32,13 +32,13 @@
       "minimumReleaseAge": "3 days"
     },
     {
-      "description": "Patch & Minor automatisch mergen nach grüner CI",
+      "description": "Patch & Minor automatisch mergen – Di/Mi/Do um 9 Uhr",
       "matchUpdateTypes": ["minor", "patch"],
       "automerge": true,
       "automergeType": "pr",
       "automergeStrategy": "squash",
       "platformAutomerge": true,
-      "schedule": ["before 3am on Monday"]
+      "schedule": ["at 5:00am on Tuesday, Wednesday, and Thursday"]
     }
   ],
   "lockFileMaintenance": {
@@ -47,6 +47,6 @@
     "automergeType": "pr",
     "automergeStrategy": "squash",
     "platformAutomerge": true,
-    "schedule": ["before 3am on Sunday"]
+    "schedule": ["at 5:00am on Tuesday, Wednesday, and Thursday"]
   }
 }

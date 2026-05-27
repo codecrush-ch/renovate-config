@@ -1,0 +1,4 @@
+# sync-develop Job: Renovate-Pushes ausschliessen (Sync nach Deploy in renovate-production.yaml)
+jobs:
+  sync-develop:
+    if: github.actor != 'renovate[bot]'

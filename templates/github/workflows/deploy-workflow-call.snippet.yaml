@@ -1,0 +1,15 @@
+# In bestehende deploy.yaml unter "on:" einfügen (vor workflow_dispatch):
+  workflow_call:
+    inputs:
+      environment:
+        description: "Zielumgebung"
+        required: true
+        type: string
+      services_to_deploy:
+        description: "Services zum Deployment"
+        required: false
+        type: string
+        default: "auto"
+
+# setup-Job: workflow_call und workflow_dispatch nutzen dieselbe inputs.environment-Logik
+# (bestehendes "else" mit case inputs.environment bleibt unverändert).
