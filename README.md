@@ -55,21 +55,9 @@ Overrides einfach in der `renovate.json` des Repos ergänzen — sie werden mit 
 
 ## Renovate → Production (GitHub Actions)
 
-Für Repos mit `deploy.yaml` und Auto-Merge durch Renovate:
+Vollständige Dokumentation mit Flowcharts: **[docs/RENOVATE-PRODUCTION.md](docs/RENOVATE-PRODUCTION.md)**
 
-| Datei | Quelle |
-|---|---|
-| `renovate-production.yaml` | [`templates/github/workflows/renovate-production.yaml`](templates/github/workflows/renovate-production.yaml) |
-| `deploy.yaml` Ergänzung | [`deploy-workflow-call.snippet.yaml`](templates/github/workflows/deploy-workflow-call.snippet.yaml) |
-| `sync-develop.yaml` | [`sync-develop-renovate.snippet.yaml`](templates/github/workflows/sync-develop-renovate.snippet.yaml) |
-
-Ablauf: Renovate merged auf `main` (oder `develop` ohne `main`) → Production-Deploy → optional `develop` mit `main` abgleichen. Keine Tags/Releases für Renovate.
-
-**Test:** Workflow «♻️ Renovate Production» manuell starten, `skip_actor_check` aktivieren.
-
-**Vorerst manuell prüfen:** Config-Repos, `movermap-app`, abweichende Deploy-Workflows (z. B. `schreiner-berneroberland.ch`, `gastrostory.ch`).
-
-Template wandert später ins D3-Projekt-Repo für neue Projekte.
+Kurz: Templates unter `templates/github/workflows/` — Pilot `backyardultrachur.ch`; Rollout und Ausnahmen siehe Doku.
 
 ---
 
