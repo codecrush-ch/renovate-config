@@ -3,6 +3,7 @@
   "extends": [
     "config:best-practices"
   ],
+  "timezone": "Europe/Zurich",
   "prConcurrentLimit": 5,
   "automerge": false,
   "packageRules": [
