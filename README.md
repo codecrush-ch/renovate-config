@@ -24,12 +24,12 @@ Zentrale [Renovate](https://docs.renovatebot.com/) Konfiguration für alle Repos
 | Regel | Verhalten |
 |---|---|
 | **Major Updates** | Nur nach manueller Freigabe im Dependency Dashboard |
-| **Minor, Patch & Docker-Digests** | Automatischer Squash-Merge, CI muss grün sein — Di/Mi/Do um 5 Uhr |
+| **Minor, Patch & Docker-Digests** | Automatischer Squash-Merge, CI muss grün sein — Di/Mi/Do vor 6 Uhr |
 | **`nuxt`, `@nuxt/*`** | Locked auf `^3`, kein Major-PR |
 | **`vue`, `vue-router`** | Locked auf `^3`, kein Major-PR |
 | **devDependencies** | Gebündelt in einem einzigen PR |
 | **npm/pnpm Releases** | 3 Tage Wartezeit vor erstem PR |
-| **Lockfile Maintenance** | Automerge via Squash, Di/Mi/Do um 5 Uhr |
+| **Lockfile Maintenance** | Automerge via Squash, Di/Mi/Do vor 6 Uhr |
 | **Max. offene PRs** | 5 gleichzeitig |
 
 ---
