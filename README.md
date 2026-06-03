@@ -24,7 +24,7 @@ Zentrale [Renovate](https://docs.renovatebot.com/) Konfiguration für alle Repos
 | Regel | Verhalten |
 |---|---|
 | **Major Updates** | Nur nach manueller Freigabe im Dependency Dashboard |
-| **Minor, Patch & Docker-Digests** | Automatischer Squash-Merge, CI muss grün sein — Di/Mi/Do vor 6 Uhr |
+| **Minor, Patch & Docker-Digests** | Automatischer Squash-Merge durch Renovate (`platformAutomerge: false`) — Di/Mi/Do vor 06:00 Europe/Zurich |
 | **`nuxt`, `@nuxt/*`** | Locked auf `^3`, kein Major-PR |
 | **`vue`, `vue-router`** | Locked auf `^3`, kein Major-PR |
 | **devDependencies** | Gebündelt in einem einzigen PR |

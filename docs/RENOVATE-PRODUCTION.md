@@ -66,8 +66,9 @@ flowchart TD
 | Regel | Verhalten |
 |-------|-----------|
 | **Major** | Nur mit Freigabe im Dependency Dashboard |
-| **Minor, Patch, Docker-Digest** | Auto-Merge, Squash, Di/Mi/Do **5:00 UTC** |
+| **Minor, Patch, Docker-Digest** | Auto-Merge (Renovate, nicht GitHub-Queue), Squash, Di/Mi/Do **vor 06:00 Europe/Zurich** |
 | **Lockfile Maintenance** | Auto-Merge, gleicher Schedule |
+| **platformAutomerge** | `false` — funktioniert ohne „Allow auto-merge“ im Repo; `automergeSchedule` wird eingehalten |
 | **npm/pnpm** | `minimumReleaseAge`: 3 Tage |
 | **Nuxt / Vue** | Kein Major über `^3` hinaus |
 | **devDependencies** | Gebündelt (`groupName`) |
@@ -81,14 +82,15 @@ Ein **Digest** (`sha256:…`) pinnt ein Image exakt. Ein Digest-PR aktualisiert 
 ### Wann merged Renovate?
 
 - **PR-Erstellung:** je nach Regel (npm nach 3 Tagen, Docker oft am Schedule)
-- **Auto-Merge:** Di/Mi/Do **5:00 UTC** (sofern Automerge im PR „Enabled“, CI grün, Repo erlaubt Auto-Merge)
+- **Auto-Merge:** Di/Mi/Do **vor 06:00 Europe/Zurich** (Renovate merged selbst bei `platformAutomerge: false`)
 - **Config wirkt:** typisch innerhalb **1–2 h** nach Push auf `renovate-config`/`develop`
 
 ### Voraussetzungen auf GitHub (Repo)
 
-1. **Settings → General → Pull Requests → Allow auto-merge**
-2. **Branch protection:** required checks, falls konfiguriert
-3. [Renovate GitHub App](https://github.com/apps/renovate) am Repo aktiv
+1. [Renovate GitHub App](https://github.com/apps/renovate) am Repo aktiv
+2. **Branch protection:** required checks, falls konfiguriert (Renovate merged erst wenn grün)
+3. **Allow auto-merge** im Repo ist **nicht** nötig (`platformAutomerge: false`)
+4. Renovate-Lauf muss **innerhalb** des Fensters stattfinden (vor 06:00 Zurich) — sonst wird bis zum nächsten Di/Mi/Do gewartet
 
 ---
 
@@ -271,7 +273,7 @@ Templates später zusätzlich im **D3-Projekt-Repo** für neue Projekte.
 | Symptom | Mögliche Ursache |
 |---------|------------------|
 | PR: „Automerge: Disabled“ | Update-Typ nicht in Regel (z. B. Major); Config noch nicht auf `renovate-config`/`develop` |
-| PR offen trotz „Enabled“ | Warten auf Di/Mi/Do 5:00 UTC; CI rot; Auto-Merge im Repo aus |
+| PR offen trotz „Enabled“ | Renovate-Lauf ausserhalb „before 6am“ (Zurich); CI rot; früher `platformAutomerge: true` + `allow_auto_merge: false` |
 | Merge auf `develop`, kein Production-Deploy | Gate: Repo hat `main` → `baseBranches: ["main"]` setzen |
 | Merge auf `main`, kein Deploy | Actor nicht `renovate[bot]` (manueller Merge) |
 | Develop-Sync doppelt | Soll nicht vorkommen: `sync-develop` skippt `renovate[bot]` |
