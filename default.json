@@ -33,14 +33,14 @@
       "minimumReleaseAge": "3 days"
     },
     {
-      "description": "Patch, Minor & Docker-Digests: Di/Mi/Do vor 06:00 (Europe/Zurich), Renovate merged selbst",
+      "description": "Patch, Minor & Docker-Digests: Di/Mi/Do-Nacht 23:00–05:59 (Europe/Zurich)",
       "matchUpdateTypes": ["minor", "patch", "digest"],
       "automerge": true,
       "automergeType": "pr",
       "automergeStrategy": "squash",
       "platformAutomerge": false,
-      "schedule": ["before 6am on tuesday, wednesday and thursday"],
-      "automergeSchedule": ["before 6am on tuesday, wednesday and thursday"]
+      "schedule": ["* 23 * * 2,3,4", "* 0-5 * * 3,4,5"],
+      "automergeSchedule": ["* 23 * * 2,3,4", "* 0-5 * * 3,4,5"]
     }
   ],
   "lockFileMaintenance": {
@@ -49,7 +49,7 @@
     "automergeType": "pr",
     "automergeStrategy": "squash",
     "platformAutomerge": false,
-    "schedule": ["before 6am on tuesday, wednesday and thursday"],
-    "automergeSchedule": ["before 6am on tuesday, wednesday and thursday"]
+    "schedule": ["* 23 * * 2,3,4", "* 0-5 * * 3,4,5"],
+    "automergeSchedule": ["* 23 * * 2,3,4", "* 0-5 * * 3,4,5"]
   }
 }
