@@ -36,6 +36,7 @@
       "description": "Patch, Minor & Docker-Digests: Di/Mi/Do-Nacht 23:00–05:59 (Europe/Zurich)",
       "matchUpdateTypes": ["minor", "patch", "digest"],
       "automerge": true,
+      "ignoreTests": true,
       "automergeType": "pr",
       "automergeStrategy": "squash",
       "platformAutomerge": false,
@@ -46,6 +47,7 @@
   "lockFileMaintenance": {
     "enabled": true,
     "automerge": true,
+    "ignoreTests": true,
     "automergeType": "pr",
     "automergeStrategy": "squash",
     "platformAutomerge": false,

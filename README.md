@@ -10,8 +10,12 @@ Zentrale [Renovate](https://docs.renovatebot.com/) Konfiguration für alle Repos
 
 ```json
 {
-  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["github>codecrush-ch/renovate-config"]
+  "extends": [
+    "github>codecrush-ch/renovate-config"
+  ],
+  "baseBranchPatterns": [
+    "main"
+  ]
 }
 ```
 
